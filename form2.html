@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Process Your Sacrifices — YWAM Derby</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* ── Tokens ── */
+  :root {
+    --ink:        #1a1714;
+    --ink-soft:   #4a4540;
+    --ink-muted:  #8a8078;
+    --parchment:  #f7f3ed;
+    --warm-mid:   #e8e0d4;
+    --accent:     #8b6f4e;
+    --accent-light: #c4a882;
+    --accent-deep:  #5c4535;
+    --breath:     #f0ebe3;
+    --radius:     4px;
+    --serif:      'Cormorant Garamond', Georgia, serif;
+    --sans:       'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--parchment);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── Grain texture overlay ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  /* ── Layout ── */
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 4rem 2rem 8rem;
+  }
+
+  /* ── Header ── */
+  .header {
+    margin-bottom: 4rem;
+    opacity: 0;
+    animation: rise 0.9s ease forwards;
+  }
+
+  .header-rule {
+    width: 48px;
+    height: 1px;
+    background: var(--accent);
+    margin-bottom: 2rem;
+  }
+
+  .header h1 {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 0.75rem;
+  }
+
+  .header h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .header .subtitle {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-weight: 300;
+  }
+
+  .header .intro {
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    max-width: 520px;
+    border-left: 2px solid var(--accent-light);
+    padding-left: 1.25rem;
+  }
+
+  /* ── Identity section ── */
+  .identity-section {
+    background: var(--breath);
+    border: 1px solid var(--warm-mid);
+    border-radius: 8px;
+    padding: 1.75rem;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: rise 0.9s ease 0.2s forwards;
+  }
+
+  .identity-section p {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    margin-bottom: 1rem;
+  }
+
+  .identity-choices {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  .identity-choices label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: var(--ink-soft);
+  }
+
+  .name-input-wrap {
+    display: none;
+    margin-top: 0.75rem;
+  }
+
+  .name-input-wrap.visible { display: block; }
+
+  /* ── Form sections ── */
+  .form-section {
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: rise 0.9s ease forwards;
+  }
+
+  .section-label {
+    font-family: var(--serif);
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--warm-mid);
+  }
+
+  /* ── Question block ── */
+  .question {
+    margin-bottom: 2.5rem;
+  }
+
+  .question-text {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+  }
+
+  .question-note {
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+    margin-bottom: 1rem;
+    font-style: italic;
+  }
+
+  /* ── Scaled choice ── */
+  .scale-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .scale-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--warm-mid);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.18s, border-color 0.18s;
+    background: white;
+  }
+
+  .scale-option:hover {
+    background: var(--breath);
+    border-color: var(--accent-light);
+  }
+
+  .scale-option input[type="radio"] { display: none; }
+
+  .scale-option.selected {
+    background: var(--breath);
+    border-color: var(--accent);
+    box-shadow: inset 3px 0 0 var(--accent);
+  }
+
+  .scale-option .mark {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--warm-mid);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: all 0.18s;
+    position: relative;
+  }
+
+  .scale-option.selected .mark {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+
+  .scale-option.selected .mark::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    background: white;
+    border-radius: 50%;
+  }
+
+  .option-text {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  /* ── Text area ── */
+  .text-field {
+    width: 100%;
+    background: white;
+    border: 1px solid var(--warm-mid);
+    border-radius: var(--radius);
+    padding: 1rem 1.1rem;
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1.7;
+    resize: vertical;
+    min-height: 100px;
+    transition: border-color 0.18s;
+    outline: none;
+  }
+
+  .text-field:focus {
+    border-color: var(--accent);
+  }
+
+  .text-field::placeholder {
+    color: var(--ink-muted);
+    font-style: italic;
+  }
+
+  /* ── Input shared ── */
+  input[type="text"], input[type="email"] {
+    width: 100%;
+    background: white;
+    border: 1px solid var(--warm-mid);
+    border-radius: var(--radius);
+    padding: 0.75rem 1rem;
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.18s;
+  }
+
+  input[type="text"]:focus, input[type="email"]:focus {
+    border-color: var(--accent);
+  }
+
+  input[type="radio"] {
+    accent-color: var(--accent);
+  }
+
+  /* ── Submit ── */
+  .submit-wrap {
+    margin-top: 3rem;
+    opacity: 0;
+    animation: rise 0.9s ease 1s forwards;
+  }
+
+  .submit-btn {
+    background: var(--accent-deep);
+    color: var(--parchment);
+    border: none;
+    padding: 1rem 2.5rem;
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .submit-btn:hover {
+    background: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  .submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .submit-note {
+    margin-top: 0.75rem;
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+  }
+
+  /* ── Breath moment (before result) ── */
+  #breath-moment {
+    display: none;
+    text-align: center;
+    padding: 4rem 2rem;
+    opacity: 0;
+    animation: rise 1.2s ease forwards;
+  }
+
+  #breath-moment .breath-line {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--ink-soft);
+    line-height: 1.8;
+  }
+
+  #breath-moment .breath-sub {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+  }
+
+  /* ── Result card ── */
+  #result-section {
+    display: none;
+    opacity: 0;
+    animation: rise 1s ease forwards;
+  }
+
+  .result-card {
+    background: white;
+    border: 1px solid var(--warm-mid);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 1rem;
+  }
+
+  .result-header {
+    background: var(--accent-deep);
+    padding: 2.5rem 2rem 2rem;
+    color: var(--parchment);
+    text-align: center;
+  }
+
+  .result-emoji {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    display: block;
+    filter: grayscale(0.2);
+  }
+
+  .result-animal-name {
+    font-family: var(--serif);
+    font-size: 2rem;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+  }
+
+  .result-body {
+    padding: 2rem;
+  }
+
+  .result-season {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--ink);
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--warm-mid);
+  }
+
+  .result-threshold-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+
+  .result-threshold {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+
+  .result-secondary {
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background: var(--breath);
+    border-radius: var(--radius);
+    border-left: 3px solid var(--accent-light);
+  }
+
+  .result-secondary p {
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+
+  .result-secondary strong {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--ink);
+  }
+
+  /* ── Error ── */
+  .error-msg {
+    color: #8b3a3a;
+    font-size: 0.88rem;
+    margin-top: 0.5rem;
+    display: none;
+  }
+
+  /* ── Animations ── */
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0);    }
+  }
+
+  .form-section:nth-child(1) { animation-delay: 0.3s; }
+  .form-section:nth-child(2) { animation-delay: 0.45s; }
+  .form-section:nth-child(3) { animation-delay: 0.6s; }
+  .form-section:nth-child(4) { animation-delay: 0.75s; }
+  .form-section:nth-child(5) { animation-delay: 0.9s; }
+
+  /* ── Divider ── */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: var(--warm-mid);
+    margin: 3rem 0;
+  }
+
+  /* ── Loading state ── */
+  .loading-dots::after {
+    content: '...';
+    animation: dots 1.2s steps(4, end) infinite;
+  }
+
+  @keyframes dots {
+    0%, 20% { content: '.'; }
+    40%      { content: '..'; }
+    60%      { content: '...'; }
+    80%,100% { content: ''; }
+  }
+</style>
+</head>
+<body>
+<div class="page" id="form-page">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-rule"></div>
+    <h1>Process Your<br><em>Sacrifices</em></h1>
+    <p class="subtitle">What was this last season like for you?</p>
+    <p class="intro">
+      This isn't a survey. It's an invitation to sit honestly with what you've lived through.
+      There are no right answers. Your responses are for you first — and for the health of this community second.
+    </p>
+  </header>
+
+  <!-- Main form -->
+  <form id="main-form" novalidate>
+
+    <!-- Identity -->
+    <div class="identity-section">
+      <p>You can respond with your name attached, or anonymously. Either is completely fine.</p>
+      <div class="identity-choices">
+        <label>
+          <input type="radio" name="identity_choice" value="named" id="id-named"> Use my name
+        </label>
+        <label>
+          <input type="radio" name="identity_choice" value="anonymous" id="id-anon" checked> Stay anonymous
+        </label>
+      </div>
+      <div class="name-input-wrap" id="name-wrap">
+        <input type="text" id="name-field" placeholder="Your name" autocomplete="name">
+      </div>
+    </div>
+
+    <!-- Section 1: The weight you carried -->
+    <div class="form-section">
+      <div class="section-label">The weight you carried</div>
+
+      <!-- Q1 — covert: response direction -->
+      <div class="question" data-qid="q1">
+        <p class="question-text">When something went wrong unexpectedly this season, what was your most natural first move?</p>
+        <div class="scale-options">
+          <label class="scale-option" data-score='{"responseDirection":{"toward":3},"energyPattern":{"outward":2},"thresholdBehaviour":{"push":2}}'>
+            <input type="radio" name="q1" value="a">
+            <span class="mark"></span>
+            <span class="option-text">I moved toward it and tried to fix it immediately</span>
+          </label>
+          <label class="scale-option" data-score='{"responseDirection":{"around":3},"energyPattern":{"outward":2},"thresholdBehaviour":{"move":2}}'>
+            <input type="radio" name="q1" value="b">
+            <span class="mark"></span>
+            <span class="option-text">I found a way around it — kept things moving another way</span>
+          </label>
+          <label class="scale-option" data-score='{"responseDirection":{"around":2},"energyPattern":{"inward":2},"thresholdBehaviour":{"quiet":2}}'>
+            <input type="radio" name="q1" value="c">
+            <span class="mark"></span>
+            <span class="option-text">I watched first — I needed to understand before acting</span>
+          </label>
+          <label class="scale-option" data-score='{"responseDirection":{"away":2},"energyPattern":{"inward":2},"thresholdBehaviour":{"quiet":1},"thresholdBehaviour2":{"withdraw":1}}'>
+            <input type="radio" name="q1" value="d">
+            <span class="mark"></span>
+            <span class="option-text">I made sure the people around me were okay first</span>
+          </label>
+          <label class="scale-option" data-score='{"responseDirection":{"away":2},"energyPattern":{"private":2},"thresholdBehaviour":{"withdraw":2}}'>
+            <input type="radio" name="q1" value="e">
+            <span class="mark"></span>
+            <span class="option-text">I stepped back and waited — clarity had to come before movement</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Q2 — covert: energy pattern -->
+      <div class="question" data-qid="q2">
+        <p class="question-text">Where did most of your energy go this season?</p>
+        <div class="scale-options">
+          <label class="scale-option" data-score='{"energyPattern":{"outward":3},"responseDirection":{"toward":2}}'>
+            <input type="radio" name="q2" value="a">
+            <span class="mark"></span>
+            <span class="option-text">Into other people — I was giving a lot outward</span>
+          </label>
+          <label class="scale-option" data-score='{"energyPattern":{"outward":2},"responseDirection":{"around":2},"thresholdBehaviour":{"move":2}}'>
+            <input type="radio" name="q2" value="b">
+            <span class="mark"></span>
+            <span class="option-text">Into keeping things running — practical, behind the scenes</span>
+          </label>
+          <label class="scale-option" data-score='{"energyPattern":{"inward":3},"responseDirection":{"around":2}}'>
+            <input type="radio" name="q2" value="c">
+            <span class="mark"></span>
+            <span class="option-text">Into processing what I was observing and feeling</span>
+          </label>
+          <label class="scale-option" data-score='{"energyPattern":{"private":3},"responseDirection":{"away":2}}'>
+            <input type="radio" name="q2" value="d">
+            <span class="mark"></span>
+            <span class="option-text">Into sustaining myself quietly — I had to manage my reserves</span>
+          </label>
+          <label class="scale-option" data-score='{"energyPattern":{"inward":2},"thresholdBehaviour":{"withdraw":2},"responseDirection":{"away":1}}'>
+            <input type="radio" name="q2" value="e">
+            <span class="mark"></span>
+            <span class="option-text">I'm honestly not sure — I lost track of where it went</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Q3 — open text -->
+      <div class="question" data-qid="q3_text">
+        <p class="question-text">What was the sacrifice you made most consistently — even when you didn't name it as one?</p>
+        <p class="question-note">There's no right length for this. A sentence is fine.</p>
+        <textarea class="text-field" id="text_sacrifice" placeholder="Write freely…" rows="4"></textarea>
+      </div>
+
+    </div>
+
+    <!-- Section 2: What you absorbed -->
+    <div class="form-section">
+      <div class="section-label">What you absorbed</div>
+
+      <!-- Q4 — covert: threshold behaviour -->
+      <div class="question" data-qid="q4">
+        <p class="question-text">When the environment around you felt consistently unstable or unclear, how did you tend to respond over time?</p>
+        <div class="scale-options">
+          <label class="scale-option" data-score='{"thresholdBehaviour":{"push":3},"responseDirection":{"toward":2}}'>
+            <input type="radio" name="q4" value="a">
+            <span class="mark"></span>
+            <span class="option-text">I pushed harder — more effort felt like the right response</span>
+          </label>
+          <label class="scale-option" data-score='{"thresholdBehaviour":{"move":3},"responseDirection":{"around":2},"energyPattern":{"outward":1}}'>
+            <input type="radio" name="q4" value="b">
+            <span class="mark"></span>
+            <span class="option-text">I kept adapting — I found ways to keep things moving</span>
+          </label>
+          <label class="scale-option" data-score='{"thresholdBehaviour":{"quiet":3},"energyPattern":{"inward":2}}'>
+            <input type="radio" name="q4" value="c">
+            <span class="mark"></span>
+            <span class="option-text">I went quieter — I spoke less and observed more</span>
+          </label>
+          <label class="scale-option" data-score='{"thresholdBehaviour":{"withdraw":3},"energyPattern":{"private":2},"responseDirection":{"away":1}}'>
+            <input type="radio" name="q4" value="d">
+            <span class="mark"></span>
+            <span class="option-text">I withdrew — I protected what I still had left</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Q5 — covert: energy + response -->
+      <div class="question" data-qid="q5">
+        <p class="question-text">Did you find yourself taking on things that weren't originally yours to carry?</p>
+        <div class="scale-options">
+          <label class="scale-option" data-score='{"energyPattern":{"outward":3},"responseDirection":{"toward":2},"thresholdBehaviour":{"push":1}}'>
+            <input type="radio" name="q5" value="a">
+            <span class="mark"></span>
+            <span class="option-text">Often — I stepped in before I was asked</span>
+          </label>
+          <label class="scale-option" data-score='{"energyPattern":{"outward":2},"responseDirection":{"around":1},"thresholdBehaviour":{"move":1}}'>
+            <input type="radio" name="q5" value="b">
+            <span class="mark"></span>
+            <span class="option-text">Sometimes — I tried to help when I could see a gap</span>
+          </label>
+          <label class="scale-option" data-score='{"energyPattern":{"inward":2},"responseDirection":{"around":1}}'>
+            <input type="radio" name="q5" value="c">
+            <span class="mark"></span>
+            <span class="option-text">Occasionally — I was aware of gaps but chose carefully</span>
+          </label>
+          <label class="scale-option" data-score='{"energyPattern":{"private":2},"responseDirection":{"away":1},"thresholdBehaviour":{"quiet":1}}'>
+            <input type="radio" name="q5" value="d">
+            <span class="mark"></span>
+            <span class="option-text">Rarely — I had to protect what I had</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Q6 — open text -->
+      <div class="question" data-qid="q6_text">
+        <p class="question-text">Is there a sacrifice from this season that still feels unresolved — something you haven't quite put down yet?</p>
+        <p class="question-note">You don't have to have words for it fully. Even a partial thought is worth naming.</p>
+        <textarea class="text-field" id="text_unresolved" placeholder="Write freely…" rows="4"></textarea>
+      </div>
+
+    </div>
+
+    <!-- Section 3: What you chose -->
+    <div class="form-section">
+      <div class="section-label">What you chose</div>
+
+      <!-- Q7 — covert: response direction deeper -->
+      <div class="question" data-qid="q7">
+        <p class="question-text">Looking honestly at this season — which of these feels most true about how you operated?</p>
+        <div class="scale-options">
+          <label class="scale-option" data-score='{"responseDirection":{"toward":3},"thresholdBehaviour":{"push":2},"energyPattern":{"outward":1}}'>
+            <input type="radio" name="q7" value="a">
+            <span class="mark"></span>
+            <span class="option-text">I ran toward the difficult things — problems felt like my domain</span>
+          </label>
+          <label class="scale-option" data-score='{"responseDirection":{"around":3},"thresholdBehaviour":{"move":2},"energyPattern":{"outward":1}}'>
+            <input type="radio" name="q7" value="b">
+            <span class="mark"></span>
+            <span class="option-text">I kept things moving — I found ways through without always confronting directly</span>
+          </label>
+          <label class="scale-option" data-score='{"responseDirection":{"around":2},"energyPattern":{"inward":3},"thresholdBehaviour":{"quiet":2}}'>
+            <input type="radio" name="q7" value="c">
+            <span class="mark"></span>
+            <span class="option-text">I watched and understood — I knew more than I said</span>
+          </label>
+          <label class="scale-option" data-score='{"responseDirection":{"away":2},"energyPattern":{"inward":2},"thresholdBehaviour":{"quiet":1}}'>
+            <input type="radio" name="q7" value="d">
+            <span class="mark"></span>
+            <span class="option-text">I absorbed what was around me — atmosphere and people affected me deeply</span>
+          </label>
+          <label class="scale-option" data-score='{"responseDirection":{"away":3},"energyPattern":{"private":3},"thresholdBehaviour":{"withdraw":2}}'>
+            <input type="radio" name="q7" value="e">
+            <span class="mark"></span>
+            <span class="option-text">I protected what mattered to me — I was careful about where I gave myself</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Q8 — covert: threshold deeper -->
+      <div class="question" data-qid="q8">
+        <p class="question-text">When you reached your limit this season, what did that actually look like?</p>
+        <div class="scale-options">
+          <label class="scale-option" data-score='{"thresholdBehaviour":{"push":3},"responseDirection":{"toward":1}}'>
+            <input type="radio" name="q8" value="a">
+            <span class="mark"></span>
+            <span class="option-text">I kept going — stopping wasn't something I let myself do</span>
+          </label>
+          <label class="scale-option" data-score='{"thresholdBehaviour":{"move":3},"responseDirection":{"around":2}}'>
+            <input type="radio" name="q8" value="b">
+            <span class="mark"></span>
+            <span class="option-text">I shifted — changed what I was doing so I could keep functioning</span>
+          </label>
+          <label class="scale-option" data-score='{"thresholdBehaviour":{"quiet":3},"energyPattern":{"inward":2}}'>
+            <input type="radio" name="q8" value="c">
+            <span class="mark"></span>
+            <span class="option-text">I went inward — I got quieter and needed space to process</span>
+          </label>
+          <label class="scale-option" data-score='{"thresholdBehaviour":{"withdraw":3},"energyPattern":{"private":2},"responseDirection":{"away":2}}'>
+            <input type="radio" name="q8" value="d">
+            <span class="mark"></span>
+            <span class="option-text">I pulled back — I needed to recover what I had given</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Q9 — open text -->
+      <div class="question" data-qid="q9_text">
+        <p class="question-text">What are you most proud of from this season — something that cost you something real?</p>
+        <textarea class="text-field" id="text_proud" placeholder="Write freely…" rows="4"></textarea>
+      </div>
+
+    </div>
+
+    <!-- Section 4: The threshold -->
+    <div class="form-section">
+      <div class="section-label">Stepping into what's next</div>
+
+      <!-- Q10 — covert: energy forward -->
+      <div class="question" data-qid="q10">
+        <p class="question-text">As you think about the next season, what feels most true right now?</p>
+        <div class="scale-options">
+          <label class="scale-option" data-score='{"responseDirection":{"toward":2},"energyPattern":{"outward":2},"thresholdBehaviour":{"push":1}}'>
+            <input type="radio" name="q10" value="a">
+            <span class="mark"></span>
+            <span class="option-text">I have things I want to build — I'm ready to move forward</span>
+          </label>
+          <label class="scale-option" data-score='{"responseDirection":{"around":2},"thresholdBehaviour":{"move":2}}'>
+            <input type="radio" name="q10" value="b">
+            <span class="mark"></span>
+            <span class="option-text">I'm ready to engage differently — I want to stop managing around things</span>
+          </label>
+          <label class="scale-option" data-score='{"energyPattern":{"inward":2},"responseDirection":{"around":1},"thresholdBehaviour":{"quiet":1}}'>
+            <input type="radio" name="q10" value="c">
+            <span class="mark"></span>
+            <span class="option-text">I want to bring what I know into the open — I've been quiet long enough</span>
+          </label>
+          <label class="scale-option" data-score='{"energyPattern":{"private":1},"thresholdBehaviour":{"quiet":1}}'>
+            <input type="radio" name="q10" value="d">
+            <span class="mark"></span>
+            <span class="option-text">I need a moment before I know — I'm still processing</span>
+          </label>
+          <label class="scale-option" data-score='{"energyPattern":{"outward":1},"responseDirection":{"toward":1}}'>
+            <input type="radio" name="q10" value="e">
+            <span class="mark"></span>
+            <span class="option-text">I want to be part of something that's genuinely sustainable this time</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Q11 — open text -->
+      <div class="question" data-qid="q11_text">
+        <p class="question-text">What would it mean for you personally if this next season was genuinely different?</p>
+        <p class="question-note">You don't need to have a vision for it yet. Even an honest uncertainty is worth naming.</p>
+        <textarea class="text-field" id="text_next" placeholder="Write freely…" rows="4"></textarea>
+      </div>
+
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Submit -->
+    <div class="submit-wrap">
+      <button type="submit" class="submit-btn" id="submit-btn">Submit my responses</button>
+      <p class="submit-note">Your open text responses are read by the team shaping this next season. Scaled responses contribute to a reflection that's yours alone.</p>
+      <p class="error-msg" id="error-msg">Please answer all the scaled questions before submitting.</p>
+    </div>
+
+  </form>
+
+  <!-- Breath moment -->
+  <div id="breath-moment">
+    <p class="breath-line">Thank you for sitting with<br>these questions honestly.</p>
+    <p class="breath-sub">What you've shared matters.</p>
+  </div>
+
+  <!-- Result section -->
+  <div id="result-section">
+    <div class="header-rule" style="margin: 0 0 1.5rem;"></div>
+    <p style="font-family: var(--serif); font-size:0.85rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); margin-bottom:1.5rem;">Your season</p>
+    <div class="result-card" id="result-card">
+      <!-- populated by JS -->
+    </div>
+  </div>
+
+</div><!-- .page -->
+
+<script>
+// ── CONFIG ───────────────────────────────────────────────────
+// Replace this URL after deploying your Apps Script as a Web App
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwlKxdClUfv-kkiOwnHsNB5ZXBAjsSlylcJUH9KamlVK9KUsIyn1P39jof_G1IaJTdjKQ/exec";
+
+// ── Identity toggle ──────────────────────────────────────────
+document.querySelectorAll('input[name="identity_choice"]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    const wrap = document.getElementById('name-wrap');
+    wrap.classList.toggle('visible', radio.value === 'named' && radio.checked);
+  });
+});
+
+// ── Scale option selection ───────────────────────────────────
+document.querySelectorAll('.scale-options').forEach(group => {
+  group.querySelectorAll('.scale-option').forEach(option => {
+    option.addEventListener('click', () => {
+      group.querySelectorAll('.scale-option').forEach(o => o.classList.remove('selected'));
+      option.classList.add('selected');
+      option.querySelector('input[type="radio"]').checked = true;
+    });
+  });
+});
+
+// ── Score accumulation ───────────────────────────────────────
+function accumulateScores() {
+  const scores = {
+    responseDirection:   { toward: 0, around: 0, away: 0 },
+    energyPattern:       { outward: 0, inward: 0, private: 0 },
+    thresholdBehaviour:  { push: 0, quiet: 0, withdraw: 0, move: 0 }
+  };
+
+  document.querySelectorAll('.scale-option.selected').forEach(option => {
+    try {
+      const raw = JSON.parse(option.dataset.score);
+      for (const [axis, buckets] of Object.entries(raw)) {
+        const cleanAxis = axis.replace(/\d+$/, ''); // handle thresholdBehaviour2 etc
+        if (scores[cleanAxis]) {
+          for (const [bucket, val] of Object.entries(buckets)) {
+            scores[cleanAxis][bucket] = (scores[cleanAxis][bucket] || 0) + val;
+          }
+        }
+      }
+    } catch(e) { /* skip malformed */ }
+  });
+
+  return scores;
+}
+
+// ── Animal profiles (mirrors Apps Script) ───────────────────
+const ANIMALS = {
+  fox: {
+    name: "The Fox", emoji: "🦊",
+    season: "You navigated this season by reading the room and moving around obstacles. You kept things alive through intelligence and instinct — often doing what needed doing before anyone asked.",
+    threshold: "The next season invites you to trust the house enough to stop outmanoeuvring it."
+  },
+  squirrel: {
+    name: "The Squirrel", emoji: "🐿️",
+    season: "You quietly sustained yourself and others by storing what was needed and protecting what mattered. Much of what you carried was invisible to the people around you.",
+    threshold: "The next season invites you to bring what you've been keeping into the open."
+  },
+  ox: {
+    name: "The Ox", emoji: "🐂",
+    season: "You carried weight. Steadily, reliably, without much fuss. The work continued because you continued — even when the cost was higher than you let on.",
+    threshold: "The next season invites you to ask who has been carrying you."
+  },
+  crow: {
+    name: "The Crow", emoji: "🐦‍⬛",
+    season: "You saw more than you said. You understood the gap between what was spoken and what was true, and you operated quietly in that space — watching, perceiving, holding knowledge.",
+    threshold: "The next season invites you to say out loud what you have long known."
+  },
+  deer: {
+    name: "The Deer", emoji: "🦌",
+    season: "You felt everything first. Atmosphere, tension, shifts in the room — you absorbed it before others registered it. You stayed alert so others could feel safe.",
+    threshold: "The next season invites you to move without scanning for danger."
+  },
+  bear: {
+    name: "The Bear", emoji: "🐻",
+    season: "You protected your energy through a demanding season, sometimes going inward when the environment asked too much. That withdrawal was wisdom, not failure.",
+    threshold: "The next season invites you to bring what you rested back out into the light."
+  }
+};
+
+function scoreAnimals(scores) {
+  const rd = scores.responseDirection;
+  const ep = scores.energyPattern;
+  const tb = scores.thresholdBehaviour;
+
+  const candidates = {
+    fox:      (rd.around||0)*1.2 + (ep.outward||0)   + (tb.move||0),
+    squirrel: (rd.away||0)       + (ep.private||0)*1.2 + (tb.quiet||0),
+    ox:       (rd.toward||0)*1.2 + (ep.outward||0)   + (tb.push||0)*1.2,
+    crow:     (rd.around||0)     + (ep.inward||0)*1.2 + (tb.quiet||0)*1.2,
+    deer:     (rd.away||0)       + (ep.inward||0)*1.2 + (tb.withdraw||0),
+    bear:     (rd.away||0)*1.2   + (ep.private||0)   + (tb.withdraw||0)*1.2
+  };
+
+  const sorted = Object.entries(candidates).sort((a,b) => b[1]-a[1]);
+  return {
+    primary:   ANIMALS[sorted[0][0]],
+    secondary: ANIMALS[sorted[1][0]],
+    isClose:   (sorted[0][1] - sorted[1][1]) <= 3,
+    raw: candidates
+  };
+}
+
+// ── Validation ───────────────────────────────────────────────
+function validateScaled() {
+  const required = ['q1','q2','q4','q5','q7','q8','q10'];
+  return required.every(name => document.querySelector(`input[name="${name}"]:checked`));
+}
+
+// ── Render result ────────────────────────────────────────────
+function renderResult(result) {
+  const card = document.getElementById('result-card');
+  const p = result.primary;
+  const s = result.secondary;
+
+  card.innerHTML = `
+    <div class="result-header">
+      <span class="result-emoji">${p.emoji}</span>
+      <div class="result-animal-name">${p.name}</div>
+    </div>
+    <div class="result-body">
+      <p class="result-season">${p.season}</p>
+      <p class="result-threshold-label">Your threshold</p>
+      <p class="result-threshold">${p.threshold}</p>
+      ${result.isClose && s ? `
+        <div class="result-secondary">
+          <p>There's also something of <strong>${s.name}</strong> in your season —<br>
+          ${s.season.split('.')[0].toLowerCase()}.</p>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+// ── Submit ───────────────────────────────────────────────────
+document.getElementById('main-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const errorMsg = document.getElementById('error-msg');
+  errorMsg.style.display = 'none';
+
+  if (!validateScaled()) {
+    errorMsg.style.display = 'block';
+    errorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Sending';
+  btn.classList.add('loading-dots');
+
+  const identityChoice = document.querySelector('input[name="identity_choice"]:checked').value;
+  const identity = identityChoice === 'named'
+    ? (document.getElementById('name-field').value.trim() || 'Named (no name given)')
+    : 'Anonymous';
+
+  const scores = accumulateScores();
+  const animalResult = scoreAnimals(scores);
+
+  const payload = {
+    formId: "form2",
+    data: {
+      identity,
+      scores,
+      animalResult: animalResult.primary.name,
+      text_sacrifice:  document.getElementById('text_sacrifice').value.trim(),
+      text_unresolved: document.getElementById('text_unresolved').value.trim(),
+      text_proud:      document.getElementById('text_proud').value.trim(),
+      text_next:       document.getElementById('text_next').value.trim()
+    }
+  };
+
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode:  'no-cors', // Apps Script requires no-cors
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch(err) {
+    // no-cors means we can't read the response — that's expected.
+    // The sheet write still succeeds.
+    console.log('Submission sent (no-cors mode)');
+  }
+
+  // Hide form, show breath moment
+  document.getElementById('form-page').querySelector('form').style.display = 'none';
+  const breath = document.getElementById('breath-moment');
+  breath.style.display = 'block';
+
+  // After breath pause, show result
+  setTimeout(() => {
+    breath.style.display = 'none';
+    const resultSection = document.getElementById('result-section');
+    resultSection.style.display = 'block';
+    renderResult(animalResult);
+    resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 3800);
+});
+</script>
+</body>
+</html>
