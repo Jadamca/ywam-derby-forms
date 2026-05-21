@@ -990,17 +990,29 @@ document.getElementById('main-form').addEventListener('submit', async (e) => {
     }
   };
 
+  // Hidden iframe form POST — works reliably with Apps Script without CORS issues
   try {
-    await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      mode:  'no-cors', // Apps Script requires no-cors
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
+    const iframe = document.createElement('iframe');
+    iframe.name = 'hidden_iframe';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    const hiddenForm = document.createElement('form');
+    hiddenForm.method = 'POST';
+    hiddenForm.action = APPS_SCRIPT_URL;
+    hiddenForm.target = 'hidden_iframe';
+    hiddenForm.style.display = 'none';
+
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'payload';
+    input.value = JSON.stringify(payload);
+    hiddenForm.appendChild(input);
+
+    document.body.appendChild(hiddenForm);
+    hiddenForm.submit();
   } catch(err) {
-    // no-cors means we can't read the response — that's expected.
-    // The sheet write still succeeds.
-    console.log('Submission sent (no-cors mode)');
+    console.log('Submission error:', err);
   }
 
   // Hide form, show breath moment
